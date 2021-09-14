@@ -4,10 +4,10 @@ on:
   push:
     branches: [hoved]
     paths:
-      - "apis/poi/web/"
+      - "apis/poi/**"
   pull_request:
     paths:
-      - "apis/poi/web/"
+      - "apis/poi/**"
 
 jobs:
   test-build:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./apis/poi/web/
+        working-directory: ./apis/poi/**
         
     steps:
     - uses: actions/checkout@v2
