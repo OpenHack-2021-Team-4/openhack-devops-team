@@ -9,7 +9,6 @@ on:
     paths: 
       - 'apis/user-java/**'
   pull_request: 
-    branches: [ hoved ]
     paths: 
       - 'apis/user-java/**'
 jobs:
