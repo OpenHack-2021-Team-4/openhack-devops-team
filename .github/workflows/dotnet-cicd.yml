@@ -39,6 +39,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: apis/poi/tests/UnitTests/TestResults/coverage.info
+          parallel: true
 
   finish:
     needs: test-build
@@ -47,5 +48,5 @@ jobs:
       - name: Coveralls Finished
         uses: coverallsapp/github-action@master
         with:
-          github-token: ${{ secrets.github_token }}
-          path-to-lcov: apis/poi/tests/UnitTests/TestResults/coverage.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
