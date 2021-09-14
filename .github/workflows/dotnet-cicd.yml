@@ -1,0 +1,31 @@
+name: .NET CI/CD workflow
+
+on:
+  push:
+    branches: [hoved]
+    paths:
+      - "apis/poi/**"
+  pull_request:
+    paths:
+      - "apis/poi/**"
+
+jobs:
+  test-build:
+    name: Test and Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apis/poi
+        
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
