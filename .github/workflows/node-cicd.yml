@@ -21,7 +21,9 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '8'
+        cache: 'npm'
+        cache-dependency-path: ./apis/userprofile/package-lock.json
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
