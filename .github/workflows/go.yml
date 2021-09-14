@@ -1,0 +1,36 @@
+name: Go CI/CD Workflow
+
+on:
+  push:
+    branches: [hoved]
+    paths:
+      - "apis/trips/**"
+  pull_request:
+    paths:
+      - "apis/trips/**"
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apis/trips
+        
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.11
+
+    - name: Go Mod Get
+      run: go get
+
+    - name: Test
+      run: go test -v ./...
+
+    - name: Build
+      run: go build CGO_ENABLED=0 GOOS=linux -v ./...
+
