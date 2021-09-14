@@ -29,7 +29,7 @@ jobs:
       run: go get
 
     - name: Test
-      run: go test -v ./...
+      run: go test ./tests
 
     - name: Build
       run: go build CGO_ENABLED=0 GOOS=linux -v ./...
