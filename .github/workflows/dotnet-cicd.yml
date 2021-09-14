@@ -19,18 +19,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 2.1.x
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Build
         run: dotnet build --no-restore
+
       - name: Test
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
-      - name: Publish coverage report
+
+      - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: apis/poi/tests/UnitTests/TestResults/coverage.info
+
+  finish:
+    needs: test-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
