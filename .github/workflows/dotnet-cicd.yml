@@ -54,7 +54,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/hoved' }}
     needs: [test]
 
-    runs-on: [on-prem, ubuntu-latest]
+    runs-on: ubuntu-latest
 
     env:
       APP_NAME: "openhackjlq85zk4poi"
