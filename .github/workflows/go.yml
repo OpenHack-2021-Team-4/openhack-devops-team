@@ -29,7 +29,7 @@ jobs:
       run: go get
 
     - name: Test
-      run: go test ./...
+      run: go test ./tests
     
     - name: Open Issue
       if: ${{ failure() }}
