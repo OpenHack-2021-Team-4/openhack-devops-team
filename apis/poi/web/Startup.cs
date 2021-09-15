@@ -22,6 +22,7 @@ namespace poi
     {
         public Startup(IConfiguration configuration)
         {
+            // This is how we do it
             Configuration = configuration;
         }
 
