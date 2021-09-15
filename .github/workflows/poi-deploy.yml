@@ -4,11 +4,16 @@ on:
   push:
     branches: [hoved]
     paths:
-      - "apis/poi/**"
+      - "apis/poi/web/**"
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./apis/poi/web
+
     steps:
       # checkout the repo
       - name: "Checkout GitHub Action"
