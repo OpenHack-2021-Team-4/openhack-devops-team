@@ -32,7 +32,7 @@ jobs:
       run: go test ./...
     
     - name: Open Issue
-      if: steps.tests.outputs.failed == 'false'
+      if: ${{ failure() }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       uses: JasonEtco/create-an-issue@v2
