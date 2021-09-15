@@ -34,7 +34,7 @@ jobs:
       - name: Test
         run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
 
-      - name: Coveralls
+      - name: Coveralls Coverage
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
