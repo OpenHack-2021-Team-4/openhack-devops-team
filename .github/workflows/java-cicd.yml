@@ -1,5 +1,5 @@
 #Workflow name
-name: CI/CD Pipeline
+name: Java CI/CD workflow
 on:
   push:
     branches: [hoved]
