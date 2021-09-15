@@ -30,6 +30,12 @@ jobs:
 
     - name: Test
       run: go test ./tests
+    
+    - name: Open Issue
+      if: ${{ failure() }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: JasonEtco/create-an-issue@v2
 
     - name: Build
       run: go build -v ./...
