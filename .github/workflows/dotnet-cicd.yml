@@ -54,6 +54,8 @@ jobs:
     if: ${{ github.ref == 'refs/heads/hoved' }}
     needs: [test]
 
+    runs-on: ubuntu-latest
+
     env:
       APP_NAME: "openhackjlq85zk4poi"
       CONTAINER_NAME: "devopsoh/api-poi"
