@@ -32,6 +32,12 @@ jobs:
       #Run Tests
       - name: Run Tests
         run: mvn -B test
+        #Create issue 
+      - name: Open Issue
+        if: ${{ failure() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: JasonEtco/create-an-issue@v2
   #Build's job
   build:
     #Depends on tests
