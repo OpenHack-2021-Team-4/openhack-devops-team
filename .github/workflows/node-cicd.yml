@@ -27,3 +27,8 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - name: Open Issue
+      if: ${{ failure() }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: JasonEtco/create-an-issue@v2
