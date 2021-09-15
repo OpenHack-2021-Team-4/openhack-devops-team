@@ -5,10 +5,12 @@ on:
     branch: [hoved]
     paths:
       - "apis/poi/web/**"
+      - ".github/workflows/dotnet-cicd.yml"
 
   pull_request:
     paths:
       - "apis/poi/**"
+      - ".github/workflows/dotnet-cicd.yml"
 
 jobs:
   test:
