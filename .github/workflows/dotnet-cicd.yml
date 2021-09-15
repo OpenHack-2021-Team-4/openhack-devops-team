@@ -1,10 +1,6 @@
 name: .NET CI/CD workflow
 
 on:
-  push:
-    branches: [hoved]
-    paths:
-      - "apis/poi/**"
   pull_request:
     paths:
       - "apis/poi/**"
