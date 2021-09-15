@@ -2,7 +2,7 @@ name: .NET CI/CD workflow
 
 on:
   push:
-    branch: [hoved]
+    branches: [hoved]
     paths:
       - "apis/poi/web/**"
       - ".github/workflows/dotnet-cicd.yml"
