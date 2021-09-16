@@ -153,7 +153,7 @@ jobs:
   cleanup:
     name: Cleanup
     needs: swap
-    if: ${{ always() }}
+    if: ${{ always() && github.ref == 'refs/heads/hoved' }}
 
     runs-on: ubuntu-latest
 
