@@ -152,5 +152,5 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Perform Swap
-        run: az webapp deployment slot swap --action swap --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
+      - name: Reset Swap
+        run: az webapp deployment slot swap --action reset --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
