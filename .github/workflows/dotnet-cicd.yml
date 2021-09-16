@@ -70,7 +70,6 @@ jobs:
         working-directory: ./apis/poi/web
 
     steps:
-      # checkout the repo
       - name: "Checkout GitHub Action"
         uses: actions/checkout@main
       - uses: azure/login@v1
@@ -114,16 +113,8 @@ jobs:
         id: staging_ping
         run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.STAGING_ENDPOINT }})"
 
-      - name: Preview Swap
-        if: ${{ steps.staging_ping.outputs.value == 'SERVER HEALTHY' }}
-        run: az webapp deployment slot swap --action preview --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
-
-      - name: Preview Ping
-        id: preview_ping
-        run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.STAGING_ENDPOINT }})"
-
       - name: Perform Swap
-        if: ${{ steps.preview_ping.outputs.value == 'SERVER HEALTHY' }}
+        if: ${{ steps.staging_ping.outputs.value == 'SERVER HEALTHY' }}
         run: az webapp deployment slot swap --action swap --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
 
       - name: Production Ping
@@ -132,11 +123,9 @@ jobs:
 
       - name: Reset Swap
         if: ${{ steps.production_ping.outputs.value == 'NO MORE TRIES HOCHACHO' }}
-        run: az webapp deployment slot swap --action reset --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
-
-      - name: Shut down Staging
-        if: ${{ steps.production_ping.outputs.value == 'SERVER HEALTHY' }}
-        run: az webapp stop --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging
+        run: |
+          az webapp deployment slot swap --action reset --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
+          exit 1
 
   revert:
     name: 💩👊☁
@@ -152,5 +141,26 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Start Staging
+        run: az webapp start --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging
+
       - name: Reset Swap
         run: az webapp deployment slot swap --action reset --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
+
+      - name: Shut down Staging
+        run: az webapp stop --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging
+
+  cleanup:
+    name: Cleanup
+    needs: swap
+    if: ${{ always() }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Shut down Staging
+        run: az webapp stop --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging
