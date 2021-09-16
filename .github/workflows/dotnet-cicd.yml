@@ -97,36 +97,37 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    - name: Checkout
-      uses: actions/checkout@v1
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Staging Ping
-      id: staging_ping
-      run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.STAGING_ENDPOINT }})"
-    
-    - name: Preview Swap
-      if: ${{ steps.staging_ping.outputs.value == 'SERVER HEALTHY' }}
-      run: az webapp deployment slot swap --action preview --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
-    
-    - name: Preview Ping
-      id: preview_ping
-      run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.STAGING_ENDPOINT }})"
-    
-    - name: Perform Swap
-      if: ${{ steps.preview_ping.outputs.value == 'SERVER HEALTHY' }}
-      run: az webapp deployment slot swap --action swap --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
-    
-    - name: Production Ping
-      id: production_ping
-      run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.PRODUCTION_ENDPOINT }})"
-    
-    - name: Reset Swap
-      if: ${{ steps.production_ping.outputs.value != 'SERVER HEALTHY' }}
-      run: az webapp deployment slot swap --action reset --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
+      - name: Staging Ping
+        id: staging_ping
+        run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.STAGING_ENDPOINT }})"
 
-    - name: Shut down Staging
-      if: ${{ steps.production_ping.outputs.value == 'SERVER HEALTHY' }}
-      run: az webapp stop --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging
+      - name: Preview Swap
+        if: ${{ steps.staging_ping.outputs.value == 'SERVER HEALTHY' }}
+        run: az webapp deployment slot swap --action preview --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
+
+      - name: Preview Ping
+        id: preview_ping
+        run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.STAGING_ENDPOINT }})"
+
+      - name: Perform Swap
+        if: ${{ steps.preview_ping.outputs.value == 'SERVER HEALTHY' }}
+        run: az webapp deployment slot swap --action swap --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
+
+      - name: Production Ping
+        id: production_ping
+        run: echo "::set-output name=value::$(./scripts/polling.sh ${{ env.PRODUCTION_ENDPOINT }})"
+
+      - name: Reset Swap
+        if: ${{ steps.production_ping.outputs.value != 'SERVER HEALTHY' }}
+        run: az webapp deployment slot swap --action reset --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging --target-slot production
+
+      - name: Shut down Staging
+        if: ${{ steps.production_ping.outputs.value == 'SERVER HEALTHY' }}
+        run: az webapp stop --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.APP_NAME }} --slot staging
