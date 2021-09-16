@@ -140,7 +140,7 @@ jobs:
 
   revert:
     name: 💩👊☁
-    need: swap
+    needs: swap
 
     runs-on: ubuntu-latest
 
